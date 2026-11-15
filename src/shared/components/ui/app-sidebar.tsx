@@ -11,7 +11,6 @@ import {
   Mail,
   Megaphone,
   Pencil,
-  ShieldCheck,
   Ticket,
   Users,
 } from "lucide-react";
