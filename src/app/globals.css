@@ -1,26 +1,410 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
+
+/* =========================================
+   BCC EVENTOPS DESIGN SYSTEM
+   ========================================= */
 
 @theme inline {
+  /* Typography */
+  --font-sans: var(--font-plus-jakarta-sans);
+  --font-heading: var(--font-plus-jakarta-sans);
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* shadcn semantic colors */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* BCC surface palette */
+  --color-surface: var(--bcc-surface);
+  --color-surface-dim: var(--bcc-surface-dim);
+  --color-surface-bright: var(--bcc-surface-bright);
+  --color-surface-container-lowest: var(--bcc-surface-container-lowest);
+  --color-surface-container-low: var(--bcc-surface-container-low);
+  --color-surface-container: var(--bcc-surface-container);
+  --color-surface-container-high: var(--bcc-surface-container-high);
+  --color-surface-container-highest: var(--bcc-surface-container-highest);
+  --color-surface-variant: var(--bcc-surface-variant);
+
+  /* BCC text and outline palette */
+  --color-on-surface: var(--bcc-on-surface);
+  --color-on-surface-variant: var(--bcc-on-surface-variant);
+  --color-inverse-surface: var(--bcc-inverse-surface);
+  --color-inverse-on-surface: var(--bcc-inverse-on-surface);
+  --color-outline: var(--bcc-outline);
+  --color-outline-variant: var(--bcc-outline-variant);
+  --color-surface-tint: var(--bcc-surface-tint);
+  --color-on-background: var(--bcc-on-background);
+
+  /* Original BCC brand palette */
+  --color-bcc-primary: var(--bcc-primary);
+  --color-on-primary: var(--bcc-on-primary);
+  --color-primary-container: var(--bcc-primary-container);
+  --color-on-primary-container: var(--bcc-on-primary-container);
+  --color-inverse-primary: var(--bcc-inverse-primary);
+
+  --color-on-secondary: var(--bcc-on-secondary);
+  --color-secondary-container: var(--bcc-secondary-container);
+  --color-on-secondary-container: var(--bcc-on-secondary-container);
+
+  --color-tertiary: var(--bcc-tertiary);
+  --color-on-tertiary: var(--bcc-on-tertiary);
+  --color-tertiary-container: var(--bcc-tertiary-container);
+  --color-on-tertiary-container: var(--bcc-on-tertiary-container);
+
+  --color-error: var(--bcc-error);
+  --color-on-error: var(--bcc-on-error);
+  --color-error-container: var(--bcc-error-container);
+  --color-on-error-container: var(--bcc-on-error-container);
+
+  /* Fixed palette */
+  --color-primary-fixed: var(--bcc-primary-fixed);
+  --color-primary-fixed-dim: var(--bcc-primary-fixed-dim);
+  --color-on-primary-fixed: var(--bcc-on-primary-fixed);
+  --color-on-primary-fixed-variant: var(--bcc-on-primary-fixed-variant);
+
+  --color-secondary-fixed: var(--bcc-secondary-fixed);
+  --color-secondary-fixed-dim: var(--bcc-secondary-fixed-dim);
+  --color-on-secondary-fixed: var(--bcc-on-secondary-fixed);
+  --color-on-secondary-fixed-variant: var(--bcc-on-secondary-fixed-variant);
+
+  --color-tertiary-fixed: var(--bcc-tertiary-fixed);
+  --color-tertiary-fixed-dim: var(--bcc-tertiary-fixed-dim);
+  --color-on-tertiary-fixed: var(--bcc-on-tertiary-fixed);
+  --color-on-tertiary-fixed-variant: var(--bcc-on-tertiary-fixed-variant);
+
+  /* Brand extensions */
+  --color-bcc-navy: var(--bcc-navy);
+  --color-bcc-civic-blue: var(--bcc-civic-blue);
+  --color-bcc-powder-blue: var(--bcc-powder-blue);
+  --color-bcc-ice-sky: var(--bcc-ice-sky);
+  --color-bcc-deep-slate: var(--bcc-deep-slate);
+  --color-bcc-cool-slate: var(--bcc-cool-slate);
+  --color-bcc-sidebar-active: var(--bcc-sidebar-active);
+
+  /* Functional states */
+  --color-success-container: var(--bcc-success-container);
+  --color-on-success-container: var(--bcc-on-success-container);
+  --color-warning-container: var(--bcc-warning-container);
+  --color-on-warning-container: var(--bcc-on-warning-container);
+  --color-validation: var(--bcc-validation);
+  --color-validation-container: var(--bcc-validation-container);
+  --color-on-validation-container: var(--bcc-on-validation-container);
+
+  /* Sidebar and charts */
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  /* Radius */
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+  --radius-card: 1.25rem;
+  --radius-pill: 9999px;
+
+  /* Spacing */
+  --spacing-space-xs: 4px;
+  --spacing-space-sm: 8px;
+  --spacing-space-md: 16px;
+  --spacing-space-lg: 24px;
+  --spacing-space-xl: 32px;
+  --spacing-margin: 16px;
+
+  --spacing-gutter-mobile: 16px;
+  --spacing-gutter-tablet: 40px;
+  --spacing-gutter-desktop: 64px;
+  --spacing-gutter-wide: 100px;
+
+  /* Responsive breakpoints */
+  --breakpoint-sm: 390px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1512px;
+
+  /* Typography scale */
+  --text-display-xl: 220px;
+  --text-display-xl--font-weight: 700;
+  --text-display-xl--line-height: 1;
+  --text-display-xl--letter-spacing: -0.02em;
+
+  --text-display-l: 128px;
+  --text-display-l--font-weight: 700;
+  --text-display-l--line-height: 1;
+  --text-display-l--letter-spacing: -0.02em;
+
+  --text-display: 96px;
+  --text-display--font-weight: 700;
+  --text-display--line-height: 1.1;
+  --text-display--letter-spacing: -0.01em;
+
+  --text-heading-1: 60px;
+  --text-heading-1--font-weight: 600;
+  --text-heading-1--line-height: 1.2;
+  --text-heading-1--letter-spacing: -0.01em;
+
+  --text-heading-2: 48px;
+  --text-heading-2--font-weight: 600;
+  --text-heading-2--line-height: 1.2;
+  --text-heading-2--letter-spacing: -0.01em;
+
+  --text-heading-3: 40px;
+  --text-heading-3--font-weight: 600;
+  --text-heading-3--line-height: 1.2;
+  --text-heading-3--letter-spacing: -0.005em;
+
+  --text-heading-4: 32px;
+  --text-heading-4--font-weight: 600;
+  --text-heading-4--line-height: 1.2;
+  --text-heading-4--letter-spacing: -0.005em;
+
+  --text-heading-5: 24px;
+  --text-heading-5--font-weight: 600;
+  --text-heading-5--line-height: 1.2;
+
+  --text-heading-6: 20px;
+  --text-heading-6--font-weight: 600;
+  --text-heading-6--line-height: 1.2;
+
+  --text-body-1-semibold: 16px;
+  --text-body-1-semibold--font-weight: 600;
+  --text-body-1-semibold--line-height: 1.5;
+  --text-body-1-semibold--letter-spacing: 0.005em;
+
+  --text-body-1-medium: 16px;
+  --text-body-1-medium--font-weight: 500;
+  --text-body-1-medium--line-height: 1.5;
+  --text-body-1-medium--letter-spacing: 0.005em;
+
+  --text-body-1: 16px;
+  --text-body-1--font-weight: 400;
+  --text-body-1--line-height: 1.5;
+  --text-body-1--letter-spacing: 0.005em;
+
+  --text-body-2-semibold: 14px;
+  --text-body-2-semibold--font-weight: 600;
+  --text-body-2-semibold--line-height: 1.5;
+  --text-body-2-semibold--letter-spacing: 0.005em;
+
+  --text-body-2-medium: 14px;
+  --text-body-2-medium--font-weight: 500;
+  --text-body-2-medium--line-height: 1.5;
+  --text-body-2-medium--letter-spacing: 0.005em;
+
+  --text-body-2: 14px;
+  --text-body-2--font-weight: 400;
+  --text-body-2--line-height: 1.5;
+  --text-body-2--letter-spacing: 0.005em;
+
+  --text-caption-semibold: 12px;
+  --text-caption-semibold--font-weight: 600;
+  --text-caption-semibold--line-height: 1.5;
+  --text-caption-semibold--letter-spacing: 0.005em;
+
+  --text-caption: 12px;
+  --text-caption--font-weight: 500;
+  --text-caption--line-height: 1.5;
+  --text-caption--letter-spacing: 0.005em;
+
+  /* Elevation */
+  --shadow-card: 0px 4px 8px 0px #0186c640;
+  --shadow-overlay: 0px 16px 40px rgb(11 48 72 / 28%);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* =========================================
+   BCC COLOR VALUES
+   ========================================= */
+
+:root {
+  color-scheme: light;
+
+  /* Original YAML palette */
+  --bcc-surface: #f9f9f9;
+  --bcc-surface-dim: #dadada;
+  --bcc-surface-bright: #f9f9f9;
+  --bcc-surface-container-lowest: #ffffff;
+  --bcc-surface-container-low: #f3f3f4;
+  --bcc-surface-container: #eeeeee;
+  --bcc-surface-container-high: #e8e8e8;
+  --bcc-surface-container-highest: #e2e2e2;
+  --bcc-surface-variant: #e2e2e2;
+
+  --bcc-on-surface: #1a1c1c;
+  --bcc-on-surface-variant: #41474f;
+  --bcc-inverse-surface: #2f3131;
+  --bcc-inverse-on-surface: #f0f1f1;
+  --bcc-outline: #717880;
+  --bcc-outline-variant: #c0c7d0;
+  --bcc-surface-tint: #176393;
+  --bcc-on-background: #1a1c1c;
+
+  --bcc-primary: #00517d;
+  --bcc-on-primary: #ffffff;
+  --bcc-primary-container: #226a9a;
+  --bcc-on-primary-container: #cde6ff;
+  --bcc-inverse-primary: #92ccff;
+
+  --bcc-secondary: #42627c;
+  --bcc-on-secondary: #ffffff;
+  --bcc-secondary-container: #c0e0ff;
+  --bcc-on-secondary-container: #45647e;
+
+  --bcc-tertiary: #11517d;
+  --bcc-on-tertiary: #ffffff;
+  --bcc-tertiary-container: #336997;
+  --bcc-on-tertiary-container: #d0e5ff;
+
+  --bcc-error: #ba1a1a;
+  --bcc-on-error: #ffffff;
+  --bcc-error-container: #ffdad6;
+  --bcc-on-error-container: #93000a;
+
+  --bcc-primary-fixed: #cce5ff;
+  --bcc-primary-fixed-dim: #92ccff;
+  --bcc-on-primary-fixed: #001d31;
+  --bcc-on-primary-fixed-variant: #004b73;
+
+  --bcc-secondary-fixed: #cce5ff;
+  --bcc-secondary-fixed-dim: #aacae8;
+  --bcc-on-secondary-fixed: #001e31;
+  --bcc-on-secondary-fixed-variant: #294a63;
+
+  --bcc-tertiary-fixed: #cee5ff;
+  --bcc-tertiary-fixed-dim: #98cbfe;
+  --bcc-on-tertiary-fixed: #001d33;
+  --bcc-on-tertiary-fixed-variant: #034a76;
+
+  /* Brand extensions from Brand & Style */
+  --bcc-navy: #0b3048;
+  --bcc-civic-blue: #226a9a;
+  --bcc-powder-blue: #93c6f9;
+  --bcc-ice-sky: #e9f2fe;
+  --bcc-deep-slate: #2c4558;
+  --bcc-cool-slate: #4b718e;
+  --bcc-sidebar-active: #3b5a72;
+
+  /* Functional states */
+  --bcc-success-container: #c5fed4;
+  --bcc-on-success-container: #0d572c;
+
+  --bcc-warning-container: #feeee5;
+  --bcc-on-warning-container: #6d420e;
+
+  --bcc-validation: #b83d00;
+  --bcc-validation-container: #ffedeb;
+  --bcc-on-validation-container: #b83d00;
+
+  /* shadcn semantic mapping */
+  --background: var(--bcc-surface);
+  --foreground: var(--bcc-on-surface);
+
+  --card: var(--bcc-surface-container-lowest);
+  --card-foreground: var(--bcc-on-surface);
+
+  --popover: var(--bcc-surface-container-lowest);
+  --popover-foreground: var(--bcc-on-surface);
+
+  /* Primary actions use BCC Civic Blue */
+  --primary: var(--bcc-civic-blue);
+  --primary-foreground: var(--bcc-on-primary);
+
+  --secondary: var(--bcc-secondary);
+  --secondary-foreground: var(--bcc-on-secondary);
+
+  --muted: var(--bcc-surface-container-low);
+  --muted-foreground: var(--bcc-on-surface-variant);
+
+  --accent: var(--bcc-ice-sky);
+  --accent-foreground: var(--bcc-deep-slate);
+
+  --destructive: var(--bcc-error);
+  --destructive-foreground: var(--bcc-on-error);
+
+  --border: var(--bcc-outline-variant);
+  --input: var(--bcc-outline-variant);
+  --ring: var(--bcc-civic-blue);
+
+  /* Charts */
+  --chart-1: var(--bcc-primary);
+  --chart-2: var(--bcc-secondary);
+  --chart-3: var(--bcc-tertiary);
+  --chart-4: var(--bcc-primary-fixed-dim);
+  --chart-5: var(--bcc-secondary-fixed-dim);
+
+  /* Admin sidebar */
+  --sidebar: var(--bcc-navy);
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: var(--bcc-civic-blue);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: var(--bcc-sidebar-active);
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: rgb(255 255 255 / 12%);
+  --sidebar-ring: var(--bcc-powder-blue);
+
+  /* Standard control radius */
+  --radius: 0.75rem;
+}
+
+/* =========================================
+   GLOBAL BASE STYLES
+   ========================================= */
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
   }
-}
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  html {
+    @apply font-sans;
+    min-height: 100%;
+  }
+
+  body {
+    @apply min-h-screen bg-background text-foreground;
+  }
+
+  ::selection {
+    background: var(--bcc-secondary-container);
+    color: var(--bcc-on-secondary-fixed);
+  }
 }
