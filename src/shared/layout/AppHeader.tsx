@@ -7,11 +7,19 @@ import { EVENT_ROLE_LABELS } from "@/shared/lib/event-permissions";
 
 type AppHeaderProps = {
   role: EventRole;
+  pathname: string;
+  showEventSidebar: boolean;
   mobileOpen: boolean;
   onMenuClick: () => void;
 };
 
-export function AppHeader({ role, mobileOpen, onMenuClick }: AppHeaderProps) {
+export function AppHeader({
+  role,
+  pathname,
+  showEventSidebar,
+  mobileOpen,
+  onMenuClick,
+}: AppHeaderProps) {
   return (
     <header className="sticky top-0 z-50 flex h-16 items-center justify-between border-b border-[#c0c7d0] bg-white px-4 md:px-8">
       <div className="flex min-w-0 items-center gap-3">

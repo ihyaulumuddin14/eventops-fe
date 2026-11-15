@@ -1,3 +1,4 @@
+
 "use client";
 
 import type { LucideIcon } from "lucide-react";
@@ -7,16 +8,18 @@ import {
   ClipboardCheck,
   LayoutDashboard,
   ListOrdered,
-  LogOut,
   Megaphone,
   Pencil,
+  ShieldCheck,
   Users,
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useLogout } from "@/features/auth/hooks";
+
 import type { EventRole } from "@/shared/lib/event-permissions";
-import { can } from "@/shared/lib/event-permissions";
+import {
+  can,
+  EVENT_ROLE_LABELS,
+} from "@/shared/lib/event-permissions";
 
 type NavigationItem = {
   label: string;
@@ -32,6 +35,8 @@ type NavigationSection = {
 
 type AppSidebarProps = {
   role: EventRole;
+  eventId: string;
+  pathname: string;
   mobileOpen: boolean;
   onMobileClose: () => void;
 };
@@ -39,10 +44,8 @@ type AppSidebarProps = {
 type SidebarContentProps = {
   role: EventRole;
   pathname: string;
-  eventId: string | null;
+  eventId: string;
   onNavigate?: () => void;
-  onLogout: () => void;
-  isLoggingOut: boolean;
 };
 
 function getEventSections(
@@ -158,7 +161,8 @@ function SidebarLink({
 
   const isActive = item.exact
     ? pathname === item.href
-    : pathname === item.href || pathname.startsWith(`${item.href}/`);
+    : pathname === item.href ||
+      pathname.startsWith(`${item.href}/`);
 
   return (
     <Link
@@ -188,8 +192,6 @@ function SidebarContent({
   pathname,
   eventId,
   onNavigate,
-  onLogout,
-  isLoggingOut,
 }: SidebarContentProps) {
   const sections: NavigationSection[] = [
     ...(eventId ? getEventSections(eventId, role) : []),
@@ -197,6 +199,7 @@ function SidebarContent({
 
   return (
     <div className="flex h-full min-h-0 flex-col">
+      {/* Brand */}
       <div className="border-b border-white/10 px-5 py-6">
         <Link
           href="/events"
@@ -218,8 +221,9 @@ function SidebarContent({
         </Link>
       </div>
 
+      {/* Event navigation */}
       <nav
-        aria-label="Main navigation"
+        aria-label="Event workspace navigation"
         className="min-h-0 flex-1 space-y-6 overflow-y-auto px-3 py-6"
       >
         {sections.map((section) => (
@@ -242,25 +246,22 @@ function SidebarContent({
         ))}
       </nav>
 
+      {/* Event role */}
       <div className="border-t border-white/10 p-4">
-        <button
-          type="button"
-          onClick={onLogout}
-          disabled={isLoggingOut}
-          className={[
-            "flex min-h-11 w-full items-center gap-3 rounded-xl px-3 py-2.5",
-            "text-sm font-medium text-white/75 transition-colors",
-            "hover:bg-white/10 hover:text-[#ffb4ab]",
-            "disabled:cursor-not-allowed disabled:opacity-50",
-            "focus-visible:outline-none focus-visible:ring-2",
-            "focus-visible:ring-[#93c6f9]",
-            "motion-reduce:transition-none",
-          ].join(" ")}
-        >
-          <LogOut className="size-[18px] shrink-0" aria-hidden="true" />
+        <div className="flex items-center gap-3 rounded-xl bg-white/5 p-3">
+          <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-[#3b5a72]">
+            <ShieldCheck className="size-5 text-white" />
+          </div>
 
-          <span>{isLoggingOut ? "Logging out..." : "Log out"}</span>
-        </button>
+          <div className="min-w-0">
+            <p className="truncate text-sm font-semibold text-white">
+              {EVENT_ROLE_LABELS[role]}
+            </p>
+            <p className="text-xs text-[#c0e0ff]">
+              Event role
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -268,45 +269,47 @@ function SidebarContent({
 
 export function AppSidebar({
   role,
+  eventId,
+  pathname,
   mobileOpen,
   onMobileClose,
 }: AppSidebarProps) {
-  const logout = useLogout();
-
-  const handleLogout = () => {
-    logout.mutate();
-  };
-
-  const pathname = usePathname() ?? "/";
-  const matchedEventId = pathname.match(/^\/events\/([^/]+)(?:\/|$)/)?.[1];
-  const eventId =
-    matchedEventId && matchedEventId !== "create" ? matchedEventId : null;
-
   return (
     <>
-      <aside className="sticky top-0 hidden h-screen w-[263px] shrink-0 flex-col bg-[#0b3048] text-white lg:flex">
+      {/* Mobile backdrop */}
+      {mobileOpen && (
+        <button
+          type="button"
+          aria-label="Close event navigation"
+          onClick={onMobileClose}
+          className="fixed inset-x-0 top-[108px] bottom-0 z-30 bg-[#0b3048]/30 lg:hidden"
+        />
+      )}
+
+      {/* Desktop sidebar */}
+      <aside
+        aria-label="Event workspace sidebar"
+        className="sticky top-0 hidden h-screen w-[263px] shrink-0 flex-col bg-[#0b3048] text-white lg:flex"
+      >
         <SidebarContent
           role={role}
           pathname={pathname}
           eventId={eventId}
-          onLogout={handleLogout}
-          isLoggingOut={logout.isPending}
         />
       </aside>
 
+      {/* Mobile sidebar */}
       <aside
         id="mobile-app-navigation"
-        aria-label="Mobile navigation"
+        aria-label="Mobile event navigation"
         hidden={!mobileOpen}
-        className="fixed inset-y-16 left-0 z-40 w-[min(84vw,300px)] bg-[#0b3048] text-white shadow-2xl lg:hidden"
+        className="fixed bottom-0 left-0 top-[108px] z-40 w-[min(84vw,300px)] bg-[#0b3048] text-white shadow-2xl lg:hidden"
       >
         <SidebarContent
           role={role}
           pathname={pathname}
           eventId={eventId}
           onNavigate={onMobileClose}
-          onLogout={handleLogout}
-          isLoggingOut={logout.isPending}
         />
       </aside>
     </>

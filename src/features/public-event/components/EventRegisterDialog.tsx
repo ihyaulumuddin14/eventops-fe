@@ -31,7 +31,6 @@ export function EventRegisterDialog({
   open,
   onOpenChange,
   isRegistered,
-  onRegistered,
 }: Props) {
   const router = useRouter();
   const isLoggedIn = !!useAccessToken();
