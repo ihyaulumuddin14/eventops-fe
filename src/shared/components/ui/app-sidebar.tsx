@@ -8,11 +8,8 @@ import {
   LayoutDashboard,
   ListOrdered,
   LogOut,
-  Mail,
   Megaphone,
   Pencil,
-  ShieldCheck,
-  Ticket,
   Users,
 } from "lucide-react";
 import Link from "next/link";
@@ -47,27 +44,6 @@ type SidebarContentProps = {
   onLogout: () => void;
   isLoggingOut: boolean;
 };
-
-const generalItems: NavigationItem[] = [
-  {
-    label: "Event Catalog",
-    href: "/events",
-    icon: CalendarDays,
-    exact: true,
-  },
-  {
-    label: "My Registrations",
-    href: "/my-registrations",
-    icon: Ticket,
-    exact: true,
-  },
-  {
-    label: "Invitations",
-    href: "/invitations",
-    icon: Mail,
-    exact: true,
-  },
-];
 
 function getEventSections(
   eventId: string,
@@ -216,10 +192,6 @@ function SidebarContent({
   isLoggingOut,
 }: SidebarContentProps) {
   const sections: NavigationSection[] = [
-    {
-      title: "GENERAL",
-      items: generalItems,
-    },
     ...(eventId ? getEventSections(eventId, role) : []),
   ];
 

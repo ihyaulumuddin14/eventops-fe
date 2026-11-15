@@ -1,21 +1,19 @@
-
 "use client";
 
 import {
   Archive,
   ArrowRight,
-  CalendarDays,
   CalendarCheck,
+  CalendarDays,
   MapPin,
   Search,
   Users,
   Zap,
-  Activity,
 } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { canCreateEvent } from "@/shared/lib/event-permissions";
 import type { EventRole } from "@/shared/lib/event-permissions";
+import { canCreateEvent } from "@/shared/lib/event-permissions";
 
 type EventStatus = "upcoming" | "ongoing" | "finished";
 type StatusFilter = "all" | EventStatus;
@@ -170,18 +168,17 @@ function EventCard({ event }: { event: CatalogEvent }) {
       : "Filled";
 
   return (
-
-      <article
-        className={[
-          "flex h-full min-h-[420px] flex-col overflow-hidden rounded-2xl",
-          "border border-[#e2e8f0] bg-white",
-          "shadow-[0_1px_3px_rgba(15,23,42,0.06)]",
-          "transition-all duration-200",
-          "hover:-translate-y-0.5 hover:border-[#c0cbd6]",
-          "hover:shadow-[0_4px_12px_rgba(15,23,42,0.07)]",
-          "motion-reduce:transition-none motion-reduce:hover:transform-none",
-        ].join(" ")}
-      >
+    <article
+      className={[
+        "flex h-full min-h-[420px] flex-col overflow-hidden rounded-2xl",
+        "border border-[#e2e8f0] bg-white",
+        "shadow-[0_1px_3px_rgba(15,23,42,0.06)]",
+        "transition-all duration-200",
+        "hover:-translate-y-0.5 hover:border-[#c0cbd6]",
+        "hover:shadow-[0_4px_12px_rgba(15,23,42,0.07)]",
+        "motion-reduce:transition-none motion-reduce:hover:transform-none",
+      ].join(" ")}
+    >
       {/* Event heading */}
       <div className="flex-1 p-5">
         <div className="flex items-center justify-between gap-2">
@@ -230,9 +227,7 @@ function EventCard({ event }: { event: CatalogEvent }) {
       {/* Participant quota */}
       <div className="flex flex-1 flex-col px-5 pb-5 pt-4">
         <div className="flex items-center justify-between gap-2 text-[13px]">
-          <span className="font-medium text-[#41474f]">
-            {metricLabel}
-          </span>
+          <span className="font-medium text-[#41474f]">{metricLabel}</span>
 
           <span className="tabular-nums text-[#1a1c1c]">
             <strong className="font-semibold text-[#0b3048]">
@@ -261,9 +256,7 @@ function EventCard({ event }: { event: CatalogEvent }) {
           <span
             className={[
               "inline-flex items-center gap-1 font-semibold",
-              isFinished
-                ? "text-[#41474f]"
-                : "text-[#00517d]",
+              isFinished ? "text-[#41474f]" : "text-[#00517d]",
             ].join(" ")}
           >
             {isFinished ? (
@@ -327,8 +320,7 @@ export function EventCatalog({ role }: EventCatalogProps) {
       all: DEMO_EVENTS.length,
       upcoming: DEMO_EVENTS.filter((event) => event.status === "upcoming")
         .length,
-      ongoing: DEMO_EVENTS.filter((event) => event.status === "ongoing")
-        .length,
+      ongoing: DEMO_EVENTS.filter((event) => event.status === "ongoing").length,
       finished: DEMO_EVENTS.filter((event) => event.status === "finished")
         .length,
     };
@@ -406,7 +398,7 @@ export function EventCatalog({ role }: EventCatalogProps) {
             </div>
 
             <div
-              aria-label="Filter by event status"
+              // aria-label="Filter by event status"
               className="flex gap-2 overflow-x-auto pb-1 lg:pb-0"
             >
               {FILTERS.map((filter) => {
