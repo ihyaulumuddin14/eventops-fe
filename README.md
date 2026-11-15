@@ -55,56 +55,122 @@ The application is organized around business domains rather than technical file 
 
 ## 3. Project Structure
 
+The application uses the Next.js App Router architecture. Routes are organized using route groups to separate authentication pages from the main application.
+
+### Current Application Structure
+
 ```text
 src/
-├── app/
-│   ├── (auth)/
-│   │   ├── login/
-│   │   │   └── page.tsx
-│   │   └── register/
-│   │       └── page.tsx
-│   │
-│   └── (app)/
-│       ├── layout.tsx
-│       ├── events/
-│       │   ├── page.tsx
-│       │   ├── create/
-│       │   │   └── page.tsx
-│       │   └── [eventId]/
-│       │       ├── page.tsx
-│       │       ├── manage/
-│       │       │   ├── page.tsx
-│       │       │   ├── edit/
-│       │       │   │   └── page.tsx
-│       │       │   ├── sessions/
-│       │       │   │   ├── page.tsx
-│       │       │   │   ├── create/
-│       │       │   │   └── [sessionId]/
-│       │       │   │       └── edit/
-│       │       │   ├── announcements/
-│       │       │   │   └── page.tsx
-│       │       │   └── committee/
-│       │       │       └── page.tsx
-│       │       └── operations/
-│       │           ├── page.tsx
-│       │           └── participants/
-│       │               └── page.tsx
-│       │
-│       ├── my-registrations/
-│       │   └── page.tsx
-│       └── invitations/
-│           └── page.tsx
-│
-├── features/
-│   ├── auth/
-│   ├── events/
-│   ├── sessions/
-│   ├── registrations/
-│   ├── check-in/
-│   ├── announcements/
-│   ├── committee/
-│   └── dashboard/
-│
+└── app/
+    ├── favicon.ico
+    ├── globals.css
+    ├── layout.tsx
+    ├── page.tsx
+    │
+    ├── (auth)/
+    │   ├── login/
+    │   │   └── page.tsx
+    │   │
+    │   └── register/
+    │       └── page.tsx
+    │
+    └── (app)/
+        ├── layout.tsx
+        │
+        ├── events/
+        │   ├── page.tsx
+        │   │
+        │   ├── create/
+        │   │   └── page.tsx
+        │   │
+        │   └── [eventId]/
+        │       ├── page.tsx
+        │       │
+        │       ├── manage/
+        │       │   ├── page.tsx
+        │       │   │
+        │       │   ├── announcements/
+        │       │   │   └── page.tsx
+        │       │   │
+        │       │   ├── committee/
+        │       │   │   └── page.tsx
+        │       │   │
+        │       │   ├── edit/
+        │       │   │   └── page.tsx
+        │       │   │
+        │       │   └── sessions/
+        │       │       ├── page.tsx
+        │       │       │
+        │       │       └── [sessionId]/
+        │       │           └── edit/
+        │       │               └── page.tsx
+        │       │
+        │       └── operations/
+        │           ├── page.tsx
+        │           │
+        │           └── participants/
+        │               └── page.tsx
+        │
+        ├── invitations/
+        │   └── page.tsx
+        │
+        └── my-registrations/
+            └── page.tsx
+```
+
+### Directory Responsibilities
+
+| Directory | Responsibility |
+|---|---|
+| `app/` | Application routing, layouts, and page composition |
+| `(auth)/` | Authentication-related pages, including login and registration |
+| `(app)/` | Main application pages and authenticated application layout |
+| `events/` | Event catalog, creation, details, and event management |
+| `manage/` | Event administration and configuration |
+| `sessions/` | Event session management |
+| `announcements/` | Event announcement management |
+| `committee/` | Committee member management |
+| `operations/` | Event operational monitoring |
+| `participants/` | Participant management and attendance operations |
+| `invitations/` | Committee invitation management |
+| `my-registrations/` | Personal event registration management |
+
+### Feature Module Structure
+
+Business logic and reusable feature-specific components should be organized separately from route definitions.
+
+Example: `features/events/`
+
+```text
+features/
+└── events/
+    ├── components/
+    │   ├── event-card.tsx
+    │   ├── event-list.tsx
+    │   ├── event-form.tsx
+    │   └── event-filters.tsx
+    │
+    ├── hooks/
+    │   ├── use-events.ts
+    │   ├── use-event-detail.ts
+    │   └── use-create-event.ts
+    │
+    ├── services/
+    │   └── event-service.ts
+    │
+    ├── schemas/
+    │   └── event-schema.ts
+    │
+    ├── types/
+    │   └── event-types.ts
+    │
+    └── index.ts
+```
+
+Other shared application directories may include:
+
+```text
+src/
 ├── components/
 │   ├── ui/
 │   ├── layout/
@@ -116,63 +182,64 @@ src/
 └── types/
 ```
 
-### Feature Module Structure
+Not every feature needs all directories. Modules should be organized according to actual implementation requirements.
 
-Each feature follows a consistent internal structure when needed.
-
-Example: `features/events/`
-
-```text
-events/
-├── components/
-│   ├── event-card.tsx
-│   ├── event-list.tsx
-│   ├── event-form.tsx
-│   └── event-filters.tsx
-│
-├── hooks/
-│   ├── use-events.ts
-│   ├── use-event-detail.ts
-│   └── use-create-event.ts
-│
-├── services/
-│   └── event-service.ts
-│
-├── schemas/
-│   └── event-schema.ts
-│
-├── types/
-│   └── event-types.ts
-│
-└── index.ts
-```
-
-Not every feature needs all directories. Add modules according to actual requirements.
+---
 
 ## 4. Routing
 
-The application uses Next.js App Router and route groups to separate authentication pages from authenticated application pages.
+The application uses **Next.js App Router** with route groups to organize authentication and main application pages.
+
+### Application Routes
 
 | Route | Page | Description |
 |---|---|---|
+| `/` | Home | Application root page |
 | `/login` | Login | User authentication |
-| `/register` | Register | User account creation |
-| `/events` | Event Catalog | Browse, search, and filter events |
+| `/register` | Register | User account registration |
+| `/events` | Event Catalog | Browse, search, and filter available events |
 | `/events/create` | Create Event | Create a new event |
-| `/events/[eventId]` | Event Detail | Event information, schedule, announcements, and registration |
-| `/events/[eventId]/manage` | Event Management | Event administration |
+| `/events/[eventId]` | Event Detail | View event information and details |
+| `/events/[eventId]/manage` | Event Management | Access event administration |
 | `/events/[eventId]/manage/edit` | Edit Event | Update event information |
-| `/events/[eventId]/manage/sessions` | Session Management | Manage event sessions |
-| `/events/[eventId]/manage/sessions/create` | Create Session | Create a new session |
-| `/events/[eventId]/manage/sessions/[sessionId]/edit` | Edit Session | Update session information |
-| `/events/[eventId]/manage/announcements` | Announcement Management | Manage announcements |
+| `/events/[eventId]/manage/sessions` | Session Management | View and manage event sessions |
+| `/events/[eventId]/manage/sessions/[sessionId]/edit` | Edit Session | Update an existing session |
+| `/events/[eventId]/manage/announcements` | Announcement Management | Create, edit, and manage event announcements |
 | `/events/[eventId]/manage/committee` | Committee Management | Manage committee members and invitations |
-| `/events/[eventId]/operations` | Operations Dashboard | Monitor event operations |
-| `/events/[eventId]/operations/participants` | Participant Management | Search, filter, and check in participants |
-| `/my-registrations` | My Registrations | View personal registrations |
-| `/invitations` | My Invitations | Manage committee invitations |
+| `/events/[eventId]/operations` | Operations Dashboard | Monitor event operations and statistics |
+| `/events/[eventId]/operations/participants` | Participant Management | View participants and manage attendance |
+| `/my-registrations` | My Registrations | View personal event registrations |
+| `/invitations` | My Invitations | View and manage committee invitations |
 
-`(auth)` and `(app)` are route groups and do not appear in the actual URL.
+### Dynamic Routes
+
+The application uses dynamic route segments to identify specific events and sessions.
+
+| Dynamic Segment | Purpose |
+|---|---|
+| `[eventId]` | Identifies a specific event |
+| `[sessionId]` | Identifies a specific session within an event |
+
+For example:
+
+```text
+/events/123
+/events/123/manage
+/events/123/manage/sessions/456/edit
+```
+
+Here, `123` represents the event ID, while `456` represents the session ID.
+
+### Route Groups
+
+Next.js route groups organize application pages without affecting their public URL structure.
+
+| Route Group | Purpose |
+|---|---|
+| `(auth)` | Organizes login and registration pages |
+| `(app)` | Organizes the main application pages and shared application layout |
+
+**Important:** Route group names enclosed in parentheses do not appear in the browser URL. For example, `src/app/(auth)/login/page.tsx` resolves to `/login`, not `/(auth)/login`.
 
 ## 5. Features
 
