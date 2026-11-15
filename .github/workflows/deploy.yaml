@@ -20,7 +20,7 @@ permissions:
 
 concurrency:
   group: deploy-frontend
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 env:
   REGISTRY: ghcr.io
