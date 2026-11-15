@@ -1,6 +1,5 @@
-
-import { Suspense } from "react";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
 import { EventDetail } from "@/features/public-event/components/EventDetail";
 import { DEMO_EVENTS } from "@/shared/constant/DEMOEVENTS";
@@ -22,9 +21,7 @@ function EventDetailLoading() {
   );
 }
 
-export default function DetailEventPage({
-  params,
-}: EventDetailPageProps) {
+export default function DetailEventPage({ params }: EventDetailPageProps) {
   return (
     <Suspense fallback={<EventDetailLoading />}>
       <EventDetailContent params={params} />

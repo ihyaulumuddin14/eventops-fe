@@ -1,9 +1,9 @@
 "use client";
 
-import { useLogout } from "@/features/auth/hooks";
 import { Bell, LogOut } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useLogout } from "@/features/auth/hooks";
 
 const Navbar = () => {
   // const { data: user, isLoading } = useCurrentUser();
