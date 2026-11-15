@@ -1,4 +1,5 @@
 import { CalendarCheck, CalendarDays, MapPin, Users, Zap } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import { Button } from "@/shared/components/ui/button";
 import { type CatalogEvent, STATUS_CONFIG } from "@/shared/constant/DEMOEVENTS";
@@ -141,14 +142,30 @@ const EventCard = ({ event }: { event: CatalogEvent }) => {
             </span>
           </div>
 
-          {/* Card action */}
-          <Button
-            variant="outline"
-            onClick={() => setOpen(true)}
-            className="w-full mt-auto"
-          >
-            View Details
-          </Button>
+          {/* Card actions */}
+          <div className="mt-auto grid grid-cols-2 gap-2">
+            <Link
+              href={`/events/${event.id}`}
+              className="inline-flex min-h-10 items-center justify-center rounded-xl border border-[#c0c7d0] px-3 text-xs font-semibold text-[#42627c] transition-colors hover:bg-[#f3f3f4] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#226a9a]"
+            >
+              View Details
+            </Link>
+
+            <Button
+              variant="default"
+              disabled={isFinished || remaining === 0 || registered}
+              onClick={() => setOpen(true)}
+              className="w-full min-h-10 rounded-xl text-xs"
+            >
+              {registered
+                ? "Registered"
+                : isFinished
+                  ? "Closed"
+                  : remaining === 0
+                    ? "Full"
+                    : "Register"}
+            </Button>
+          </div>
         </div>
       </article>
 

@@ -18,22 +18,26 @@ import {
 import Link from "next/link";
 import { type FormEvent, useEffect, useRef, useState } from "react";
 import { z } from "zod";
+import {
+  type DemoAnnouncement as Announcement,
+  createDemoAnnouncements,
+} from "@/shared/constant/DEMOEVENTDETAIL";
 import { PREVIEW_ROLE } from "@/shared/lib/preview-session";
 
 gsap.registerPlugin(useGSAP);
 
 type ManagementRole = "coordinator" | "committee";
 
-type Announcement = {
-  id: string;
-  event_id: string;
-  title: string;
-  body: string;
-  sender: {
-    id: string;
-    email: string;
-  };
-};
+// type Announcement = {
+//   id: string;
+//   event_id: string;
+//   title: string;
+//   body: string;
+//   sender: {
+//     id: string;
+//     email: string;
+//   };
+// };
 
 type AnnouncementDraft = {
   title: string;
@@ -61,35 +65,35 @@ const ANNOUNCEMENT_SCHEMA = z.object({
 });
 
 // Preview data only. This does not represent persisted backend data.
-const INITIAL_ANNOUNCEMENTS: Omit<Announcement, "event_id">[] = [
-  {
-    id: "announcement-1",
-    title: "Welcome to BCC Event 2026!",
-    body: "Welcome everyone! We're excited to have you joining us.\n\nPlease keep an eye on this announcement board for important updates regarding the event.",
-    sender: {
-      id: "user-1",
-      email: "nadia@bcc.id",
-    },
-  },
-  {
-    id: "announcement-2",
-    title: "Registration and Check-in Information",
-    body: "Participants are encouraged to arrive early. Please prepare your registration confirmation and student identification card during check-in.",
-    sender: {
-      id: "user-1",
-      email: "nadia@bcc.id",
-    },
-  },
-  {
-    id: "announcement-3",
-    title: "Event Preparation Update",
-    body: "The committee is currently preparing the event venue and technical equipment. Further information will be shared through this announcement board.",
-    sender: {
-      id: "user-2",
-      email: "raka@bcc.id",
-    },
-  },
-];
+// const INITIAL_ANNOUNCEMENTS: Omit<Announcement, "event_id">[] = [
+//   {
+//     id: "announcement-1",
+//     title: "Welcome to BCC Event 2026!",
+//     body: "Welcome everyone! We're excited to have you joining us.\n\nPlease keep an eye on this announcement board for important updates regarding the event.",
+//     sender: {
+//       id: "user-1",
+//       email: "nadia@bcc.id",
+//     },
+//   },
+//   {
+//     id: "announcement-2",
+//     title: "Registration and Check-in Information",
+//     body: "Participants are encouraged to arrive early. Please prepare your registration confirmation and student identification card during check-in.",
+//     sender: {
+//       id: "user-1",
+//       email: "nadia@bcc.id",
+//     },
+//   },
+//   {
+//     id: "announcement-3",
+//     title: "Event Preparation Update",
+//     body: "The committee is currently preparing the event venue and technical equipment. Further information will be shared through this announcement board.",
+//     sender: {
+//       id: "user-2",
+//       email: "raka@bcc.id",
+//     },
+//   },
+// ];
 
 function RoleBadge({ role }: { role: ManagementRole }) {
   const isCoordinator = role === "coordinator";
@@ -210,10 +214,7 @@ export function AnnouncementsManagement({ eventId }: { eventId: string }) {
   const formRef = useRef<HTMLDivElement>(null);
 
   const [announcements, setAnnouncements] = useState<Announcement[]>(() =>
-    INITIAL_ANNOUNCEMENTS.map((announcement) => ({
-      ...announcement,
-      event_id: eventId,
-    })),
+    createDemoAnnouncements(eventId),
   );
 
   const [formOpen, setFormOpen] = useState(false);

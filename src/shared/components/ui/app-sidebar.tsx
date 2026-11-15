@@ -1,4 +1,3 @@
-
 "use client";
 
 import type { LucideIcon } from "lucide-react";
@@ -16,10 +15,7 @@ import {
 import Link from "next/link";
 
 import type { EventRole } from "@/shared/lib/event-permissions";
-import {
-  can,
-  EVENT_ROLE_LABELS,
-} from "@/shared/lib/event-permissions";
+import { can, EVENT_ROLE_LABELS } from "@/shared/lib/event-permissions";
 
 type NavigationItem = {
   label: string;
@@ -161,8 +157,7 @@ function SidebarLink({
 
   const isActive = item.exact
     ? pathname === item.href
-    : pathname === item.href ||
-      pathname.startsWith(`${item.href}/`);
+    : pathname === item.href || pathname.startsWith(`${item.href}/`);
 
   return (
     <Link
@@ -255,9 +250,7 @@ function SidebarContent({
             <p className="truncate text-sm font-semibold text-white">
               {EVENT_ROLE_LABELS[role]}
             </p>
-            <p className="text-xs text-[#c0e0ff]">
-              Event role
-            </p>
+            <p className="text-xs text-[#c0e0ff]">Event role</p>
           </div>
         </div>
       </div>
@@ -289,11 +282,7 @@ export function AppSidebar({
         aria-label="Event workspace sidebar"
         className="sticky top-0 hidden h-screen w-[263px] shrink-0 flex-col bg-[#0b3048] text-white lg:flex"
       >
-        <SidebarContent
-          role={role}
-          pathname={pathname}
-          eventId={eventId}
-        />
+        <SidebarContent role={role} pathname={pathname} eventId={eventId} />
       </aside>
 
       {/* Mobile sidebar */}

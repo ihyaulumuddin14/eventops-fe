@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 
 import { AppSidebar } from "@/shared/components/ui/app-sidebar";
 import { AppHeader } from "@/shared/layout/AppHeader";
@@ -18,7 +18,6 @@ function AppShellFallback({ children, role }: AppShellProps) {
     <div className="min-h-screen bg-[#f9f9f9]">
       <AppHeader
         role={role}
-        pathname="/"
         showEventSidebar={false}
         mobileOpen={false}
         onMenuClick={() => undefined}
@@ -33,20 +32,21 @@ function AppShellFallback({ children, role }: AppShellProps) {
 function AppShellContent({ children, role }: AppShellProps) {
   const pathname = usePathname() ?? "/";
 
-  const matchedEventId = pathname.match(
-    /^\/events\/([^/]+)(?:\/|$)/,
-  )?.[1];
+  const matchedEventId = pathname.match(/^\/events\/([^/]+)(?:\/|$)/)?.[1];
 
   const eventId =
-    matchedEventId && matchedEventId !== "create"
-      ? matchedEventId
-      : null;
+    matchedEventId && matchedEventId !== "create" ? matchedEventId : null;
 
   const [mobileOpen, setMobileOpen] = useState(false);
 
   // Close the mobile drawer whenever the route changes.
+  const previousPathname = useRef(pathname);
+
   useEffect(() => {
-    setMobileOpen(false);
+    if (previousPathname.current !== pathname) {
+      previousPathname.current = pathname;
+      setMobileOpen(false);
+    }
   }, [pathname]);
 
   // Allow Escape to close the mobile drawer.
@@ -81,7 +81,6 @@ function AppShellContent({ children, role }: AppShellProps) {
       <div className="min-w-0 flex-1">
         <AppHeader
           role={role}
-          pathname={pathname}
           showEventSidebar={Boolean(eventId)}
           mobileOpen={mobileOpen}
           onMenuClick={() => setMobileOpen((open) => !open)}
@@ -97,7 +96,9 @@ function AppShellContent({ children, role }: AppShellProps) {
 
 export function AppShell({ children, role }: AppShellProps) {
   return (
-    <Suspense fallback={<AppShellFallback role={role}>{children}</AppShellFallback>}>
+    <Suspense
+      fallback={<AppShellFallback role={role}>{children}</AppShellFallback>}
+    >
       <AppShellContent role={role}>{children}</AppShellContent>
     </Suspense>
   );
