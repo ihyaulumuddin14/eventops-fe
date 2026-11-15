@@ -10,20 +10,20 @@ import {
   Mail,
   Megaphone,
   Pencil,
-  Plus,
   ShieldCheck,
   Ticket,
   Users,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import type { EventRole } from "@/shared/lib/event-permissions";
+import { can, EVENT_ROLE_LABELS } from "@/shared/lib/event-permissions";
 
 type NavigationItem = {
   label: string;
   href: string;
   icon: LucideIcon;
   exact?: boolean;
-  primary?: boolean;
 };
 
 type NavigationSection = {
@@ -31,10 +31,17 @@ type NavigationSection = {
   items: NavigationItem[];
 };
 
-type SidebarLinkProps = {
-  item: NavigationItem;
+type AppSidebarProps = {
+  role: EventRole;
+  mobileOpen: boolean;
+  onMobileClose: () => void;
+};
+
+type SidebarContentProps = {
+  role: EventRole;
   pathname: string;
-  compact?: boolean;
+  eventId: string | null;
+  onNavigate?: () => void;
 };
 
 const generalItems: NavigationItem[] = [
@@ -58,42 +65,136 @@ const generalItems: NavigationItem[] = [
   },
 ];
 
-function SidebarLink({ item, pathname, compact = false }: SidebarLinkProps) {
+function getEventSections(
+  eventId: string,
+  role: EventRole,
+): NavigationSection[] {
+  const sections: NavigationSection[] = [
+    {
+      title: "EVENT WORKSPACE",
+      items: [
+        {
+          label: "Overview",
+          href: `/events/${eventId}`,
+          icon: LayoutDashboard,
+          exact: true,
+        },
+      ],
+    },
+  ];
+
+  const informationItems: NavigationItem[] = [];
+
+  if (can(role, "viewRundown")) {
+    informationItems.push({
+      label: "Rundown & Sessions",
+      href: `/events/${eventId}/manage/sessions`,
+      icon: ListOrdered,
+    });
+  }
+
+  if (can(role, "viewAnnouncements")) {
+    informationItems.push({
+      label: "Announcements",
+      href: `/events/${eventId}/manage/announcements`,
+      icon: Megaphone,
+      exact: true,
+    });
+  }
+
+  if (informationItems.length > 0) {
+    sections.push({
+      title: "INFORMATION",
+      items: informationItems,
+    });
+  }
+
+  const managementItems: NavigationItem[] = [];
+
+  if (can(role, "editEvent")) {
+    managementItems.push({
+      label: "Edit Event",
+      href: `/events/${eventId}/manage/edit`,
+      icon: Pencil,
+      exact: true,
+    });
+  }
+
+  if (can(role, "manageCommittee")) {
+    managementItems.push({
+      label: "Committee",
+      href: `/events/${eventId}/manage/committee`,
+      icon: Users,
+      exact: true,
+    });
+  }
+
+  if (managementItems.length > 0) {
+    sections.push({
+      title: "MANAGEMENT",
+      items: managementItems,
+    });
+  }
+
+  const operationItems: NavigationItem[] = [];
+
+  if (can(role, "viewParticipants")) {
+    operationItems.push({
+      label: "Operations Dashboard",
+      href: `/events/${eventId}/operations`,
+      icon: BarChart3,
+      exact: true,
+    });
+  }
+
+  if (can(role, "checkInParticipants")) {
+    operationItems.push({
+      label: "Participants & Check-in",
+      href: `/events/${eventId}/operations/participants`,
+      icon: ClipboardCheck,
+    });
+  }
+
+  if (operationItems.length > 0) {
+    sections.push({
+      title: "OPERATIONS",
+      items: operationItems,
+    });
+  }
+
+  return sections;
+}
+
+function SidebarLink({
+  item,
+  pathname,
+  onNavigate,
+}: {
+  item: NavigationItem;
+  pathname: string;
+  onNavigate?: () => void;
+}) {
   const Icon = item.icon;
 
   const isActive = item.exact
     ? pathname === item.href
     : pathname === item.href || pathname.startsWith(`${item.href}/`);
 
-  const baseClasses = compact
-    ? "flex w-max shrink-0 items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium"
-    : "flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium";
-
-  const stateClasses = item.primary
-    ? "text-white shadow-sm"
-    : isActive
-      ? "text-white"
-      : "text-white/75 hover:bg-white/10 hover:text-white";
-
   return (
     <Link
       href={item.href}
+      onClick={onNavigate}
       aria-current={isActive ? "page" : undefined}
-      title={item.label}
-      style={
-        item.primary
-          ? { backgroundColor: "var(--bcc-civic-blue, #226a9a)" }
-          : isActive
-            ? { backgroundColor: "var(--bcc-sidebar-active, #3b5a72)" }
-            : undefined
-      }
       className={[
-        baseClasses,
-        stateClasses,
-        "transition-colors motion-reduce:transition-none",
+        "flex w-full items-center gap-3 rounded-xl px-3 py-2.5",
+        "text-sm font-medium transition-colors",
+        "motion-reduce:transition-none",
         "focus-visible:outline-none focus-visible:ring-2",
         "focus-visible:ring-[#93c6f9] focus-visible:ring-offset-2",
         "focus-visible:ring-offset-[#0b3048]",
+        isActive
+          ? "bg-[#3b5a72] text-white"
+          : "text-white/75 hover:bg-white/10 hover:text-white",
       ].join(" ")}
     >
       <Icon className="size-[18px] shrink-0" aria-hidden="true" />
@@ -102,199 +203,119 @@ function SidebarLink({ item, pathname, compact = false }: SidebarLinkProps) {
   );
 }
 
-export function AppSidebar() {
-  const pathname = usePathname() ?? "/";
-
-  // Detect whether the user is currently inside an event workspace.
-  const eventMatch = pathname.match(/^\/events\/([^/]+)(?:\/|$)/);
-  const eventId = eventMatch?.[1];
-
-  // /events/create is not an existing event workspace.
-  const isEventWorkspace = Boolean(eventId && eventId !== "create");
-
-  const createEventItem: NavigationItem = {
-    label: "Create Event",
-    href: "/events/create",
-    icon: Plus,
-    exact: true,
-    primary: true,
-  };
-
-  const eventSections: NavigationSection[] = isEventWorkspace
-    ? [
-        {
-          title: "EVENT WORKSPACE",
-          items: [
-            {
-              label: "Overview",
-              href: `/events/${eventId}`,
-              icon: LayoutDashboard,
-              exact: true,
-            },
-          ],
-        },
-        {
-          title: "MANAGEMENT",
-          items: [
-            {
-              label: "Edit Event",
-              href: `/events/${eventId}/manage/edit`,
-              icon: Pencil,
-              exact: true,
-            },
-            {
-              label: "Sessions",
-              href: `/events/${eventId}/manage/sessions`,
-              icon: ListOrdered,
-            },
-            {
-              label: "Committee",
-              href: `/events/${eventId}/manage/committee`,
-              icon: Users,
-              exact: true,
-            },
-            {
-              label: "Announcements",
-              href: `/events/${eventId}/manage/announcements`,
-              icon: Megaphone,
-              exact: true,
-            },
-          ],
-        },
-        {
-          title: "OPERATIONS",
-          items: [
-            {
-              label: "Operations Dashboard",
-              href: `/events/${eventId}/operations`,
-              icon: BarChart3,
-              exact: true,
-            },
-            {
-              label: "Participants & Check-in",
-              href: `/events/${eventId}/operations/participants`,
-              icon: ClipboardCheck,
-            },
-          ],
-        },
-      ]
-    : [];
-
+function SidebarContent({
+  role,
+  pathname,
+  eventId,
+  onNavigate,
+}: SidebarContentProps) {
   const sections: NavigationSection[] = [
     {
       title: "GENERAL",
       items: generalItems,
     },
-    ...eventSections,
-  ];
-
-  const mobileItems = [
-    createEventItem,
-    ...generalItems,
-    ...eventSections.flatMap((section) => section.items),
+    ...(eventId ? getEventSections(eventId, role) : []),
   ];
 
   return (
-    <>
-      {/* Desktop sidebar */}
-      <aside
-        aria-label="Application sidebar"
-        className="sticky top-0 hidden h-screen w-[263px] shrink-0 flex-col bg-[#0b3048] text-white lg:flex"
-      >
-        {/* Brand */}
-        <div className="border-b border-white/10 px-5 py-6">
-          <Link href="/events" className="flex items-center gap-3">
-            <div className="flex size-10 items-center justify-center rounded-xl bg-[#226a9a]">
-              <CalendarDays className="size-5 text-white" />
-            </div>
-
-            <div className="min-w-0">
-              <p className="text-base font-semibold tracking-tight">
-                BCC EventOps
-              </p>
-              <p className="text-[10px] font-medium tracking-[0.16em] text-[#c0e0ff]">
-                EVENT MANAGEMENT
-              </p>
-            </div>
-          </Link>
-        </div>
-
-        {/* Create event */}
-        <div className="px-4 pt-5">
-          <SidebarLink item={createEventItem} pathname={pathname} />
-        </div>
-
-        {/* Navigation */}
-        <nav
-          aria-label="Main navigation"
-          className="flex-1 space-y-6 overflow-y-auto px-3 py-6"
+    <div className="flex h-full min-h-0 flex-col">
+      <div className="border-b border-white/10 px-5 py-6">
+        <Link
+          href="/events"
+          onClick={onNavigate}
+          className="flex items-center gap-3"
         >
-          {sections.map((section) => (
-            <section key={section.title} className="space-y-2">
-              <h2 className="px-3 text-[10px] font-semibold tracking-[0.16em] text-[#93c6f9]">
-                {section.title}
-              </h2>
-
-              <div className="space-y-1">
-                {section.items.map((item) => (
-                  <SidebarLink
-                    key={item.href}
-                    item={item}
-                    pathname={pathname}
-                  />
-                ))}
-              </div>
-            </section>
-          ))}
-        </nav>
-
-        {/* Role indicator */}
-        <div className="border-t border-white/10 p-4">
-          <div className="flex items-center gap-3 rounded-xl bg-white/5 p-3">
-            <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-[#3b5a72]">
-              <ShieldCheck className="size-5 text-white" />
-            </div>
-
-            <div className="min-w-0">
-              <p className="text-sm font-semibold text-white">Koordinator</p>
-              <p className="text-xs text-[#c0e0ff]">Event role</p>
-            </div>
-
-            <span
-              className="ml-auto size-2 shrink-0 rounded-full bg-[#c5fed4]"
-              aria-hidden="true"
-            />
+          <div className="flex size-10 items-center justify-center rounded-xl bg-[#226a9a]">
+            <CalendarDays className="size-5 text-white" />
           </div>
+
+          <div className="min-w-0">
+            <p className="text-base font-semibold tracking-tight">
+              BCC EventOps
+            </p>
+            <p className="text-[10px] font-medium tracking-[0.16em] text-[#c0e0ff]">
+              EVENT MANAGEMENT
+            </p>
+          </div>
+        </Link>
+      </div>
+
+      <nav
+        aria-label="Main navigation"
+        className="min-h-0 flex-1 space-y-6 overflow-y-auto px-3 py-6"
+      >
+        {sections.map((section) => (
+          <section key={section.title} className="space-y-2">
+            <h2 className="px-3 text-[10px] font-semibold tracking-[0.16em] text-[#93c6f9]">
+              {section.title}
+            </h2>
+
+            <div className="space-y-1">
+              {section.items.map((item) => (
+                <SidebarLink
+                  key={item.href}
+                  item={item}
+                  pathname={pathname}
+                  onNavigate={onNavigate}
+                />
+              ))}
+            </div>
+          </section>
+        ))}
+      </nav>
+
+      <div className="border-t border-white/10 p-4">
+        <div className="flex items-center gap-3 rounded-xl bg-white/5 p-3">
+          <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-[#3b5a72]">
+            <ShieldCheck className="size-5 text-white" />
+          </div>
+
+          <div className="min-w-0">
+            <p className="truncate text-sm font-semibold text-white">
+              {EVENT_ROLE_LABELS[role]}
+            </p>
+            <p className="text-xs text-[#c0e0ff]">Event role</p>
+          </div>
+
+          <span
+            className="ml-auto size-2 shrink-0 rounded-full bg-[#c5fed4]"
+            aria-hidden="true"
+          />
         </div>
+      </div>
+    </div>
+  );
+}
+
+export function AppSidebar({
+  role,
+  mobileOpen,
+  onMobileClose,
+}: AppSidebarProps) {
+  const pathname = usePathname() ?? "/";
+  const matchedEventId = pathname.match(/^\/events\/([^/]+)(?:\/|$)/)?.[1];
+  const eventId =
+    matchedEventId && matchedEventId !== "create" ? matchedEventId : null;
+
+  return (
+    <>
+      <aside className="sticky top-0 hidden h-screen w-[263px] shrink-0 flex-col bg-[#0b3048] text-white lg:flex">
+        <SidebarContent role={role} pathname={pathname} eventId={eventId} />
       </aside>
 
-      {/* Mobile navigation */}
-      <div className="sticky top-0 z-40 border-b border-white/10 bg-[#0b3048] text-white lg:hidden">
-        <div className="flex h-14 items-center justify-between px-4">
-          <Link href="/events" className="flex items-center gap-2">
-            <CalendarDays className="size-5" />
-            <span className="font-semibold">BCC EventOps</span>
-          </Link>
-
-          <span className="rounded-full bg-[#3b5a72] px-3 py-1 text-xs font-medium">
-            Koordinator
-          </span>
-        </div>
-
-        <nav
-          aria-label="Mobile navigation"
-          className="flex gap-1 overflow-x-auto border-t border-white/10 px-3 py-2"
-        >
-          {mobileItems.map((item) => (
-            <SidebarLink
-              key={item.href}
-              item={item}
-              pathname={pathname}
-              compact
-            />
-          ))}
-        </nav>
-      </div>
+      <aside
+        id="mobile-app-navigation"
+        aria-label="Mobile navigation"
+        hidden={!mobileOpen}
+        className="fixed inset-y-16 left-0 z-40 w-[min(84vw,300px)] bg-[#0b3048] text-white shadow-2xl lg:hidden"
+      >
+        <SidebarContent
+          role={role}
+          pathname={pathname}
+          eventId={eventId}
+          onNavigate={onMobileClose}
+        />
+      </aside>
     </>
   );
 }
