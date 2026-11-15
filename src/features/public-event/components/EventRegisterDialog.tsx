@@ -1,4 +1,3 @@
-// features/event/components/EventRegisterDialog.tsx
 "use client";
 
 import { ArrowRight, CalendarDays, Check, Loader2, MapPin } from "lucide-react";
@@ -31,7 +30,6 @@ export function EventRegisterDialog({
   open,
   onOpenChange,
   isRegistered,
-  onRegistered,
 }: Props) {
   const router = useRouter();
   const isLoggedIn = !!useAccessToken();
