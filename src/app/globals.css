@@ -10,8 +10,8 @@
 
 @theme inline {
   /* Typography */
-  --font-sans: var(--font-inter);
-  --font-heading: var(--font-inter);
+  --font-sans: var(--font-plus-jakarta-sans);
+  --font-heading: var(--font-plus-jakarta-sans);
   --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
 
   /* shadcn semantic colors */

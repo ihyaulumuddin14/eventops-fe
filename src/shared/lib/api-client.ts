@@ -13,7 +13,6 @@ export class ApiError extends Error {
   }
 }
 
-
 export async function apiRequest<T>(
   endpoint: string,
   options: RequestInit = {},

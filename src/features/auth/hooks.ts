@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -6,11 +5,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import { clearAccessToken, setAccessToken } from "@/shared/lib/token";
-import {
-  loginUser,
-  logoutUser,
-  registerUser,
-} from "../auth/api";
+import { loginUser, registerUser } from "../auth/api";
 
 export const useRegister = () => {
   return useMutation({
@@ -57,23 +52,17 @@ export const useLogout = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: logoutUser,
+    mutationFn: async () => undefined,
 
     onSuccess: () => {
+      clearAccessToken();
+      queryClient.clear();
+
       toast.dismiss();
       toast.success("Logout berhasil");
 
-      router.replace("/");
+      router.replace("/login");
       router.refresh();
-    },
-
-    onError: () => {
-      toast.error("Terjadi kesalahan sistem");
-    },
-
-    onSettled: () => {
-      queryClient.clear();
-      clearAccessToken();
     },
   });
 };

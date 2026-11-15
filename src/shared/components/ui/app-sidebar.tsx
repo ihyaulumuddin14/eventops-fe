@@ -7,6 +7,7 @@ import {
   ClipboardCheck,
   LayoutDashboard,
   ListOrdered,
+  LogOut,
   Mail,
   Megaphone,
   Pencil,
@@ -16,8 +17,9 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useLogout } from "@/features/auth/hooks";
 import type { EventRole } from "@/shared/lib/event-permissions";
-import { can, EVENT_ROLE_LABELS } from "@/shared/lib/event-permissions";
+import { can } from "@/shared/lib/event-permissions";
 
 type NavigationItem = {
   label: string;
@@ -42,6 +44,8 @@ type SidebarContentProps = {
   pathname: string;
   eventId: string | null;
   onNavigate?: () => void;
+  onLogout: () => void;
+  isLoggingOut: boolean;
 };
 
 const generalItems: NavigationItem[] = [
@@ -208,6 +212,8 @@ function SidebarContent({
   pathname,
   eventId,
   onNavigate,
+  onLogout,
+  isLoggingOut,
 }: SidebarContentProps) {
   const sections: NavigationSection[] = [
     {
@@ -265,23 +271,24 @@ function SidebarContent({
       </nav>
 
       <div className="border-t border-white/10 p-4">
-        <div className="flex items-center gap-3 rounded-xl bg-white/5 p-3">
-          <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-[#3b5a72]">
-            <ShieldCheck className="size-5 text-white" />
-          </div>
+        <button
+          type="button"
+          onClick={onLogout}
+          disabled={isLoggingOut}
+          className={[
+            "flex min-h-11 w-full items-center gap-3 rounded-xl px-3 py-2.5",
+            "text-sm font-medium text-white/75 transition-colors",
+            "hover:bg-white/10 hover:text-[#ffb4ab]",
+            "disabled:cursor-not-allowed disabled:opacity-50",
+            "focus-visible:outline-none focus-visible:ring-2",
+            "focus-visible:ring-[#93c6f9]",
+            "motion-reduce:transition-none",
+          ].join(" ")}
+        >
+          <LogOut className="size-[18px] shrink-0" aria-hidden="true" />
 
-          <div className="min-w-0">
-            <p className="truncate text-sm font-semibold text-white">
-              {EVENT_ROLE_LABELS[role]}
-            </p>
-            <p className="text-xs text-[#c0e0ff]">Event role</p>
-          </div>
-
-          <span
-            className="ml-auto size-2 shrink-0 rounded-full bg-[#c5fed4]"
-            aria-hidden="true"
-          />
-        </div>
+          <span>{isLoggingOut ? "Logging out..." : "Log out"}</span>
+        </button>
       </div>
     </div>
   );
@@ -292,6 +299,12 @@ export function AppSidebar({
   mobileOpen,
   onMobileClose,
 }: AppSidebarProps) {
+  const logout = useLogout();
+
+  const handleLogout = () => {
+    logout.mutate();
+  };
+
   const pathname = usePathname() ?? "/";
   const matchedEventId = pathname.match(/^\/events\/([^/]+)(?:\/|$)/)?.[1];
   const eventId =
@@ -300,7 +313,13 @@ export function AppSidebar({
   return (
     <>
       <aside className="sticky top-0 hidden h-screen w-[263px] shrink-0 flex-col bg-[#0b3048] text-white lg:flex">
-        <SidebarContent role={role} pathname={pathname} eventId={eventId} />
+        <SidebarContent
+          role={role}
+          pathname={pathname}
+          eventId={eventId}
+          onLogout={handleLogout}
+          isLoggingOut={logout.isPending}
+        />
       </aside>
 
       <aside
@@ -314,6 +333,8 @@ export function AppSidebar({
           pathname={pathname}
           eventId={eventId}
           onNavigate={onMobileClose}
+          onLogout={handleLogout}
+          isLoggingOut={logout.isPending}
         />
       </aside>
     </>

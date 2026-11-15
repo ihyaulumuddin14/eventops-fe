@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
-import { AppShell } from "@/shared/components/layout/app-shell";
-import { PREVIEW_ROLE } from "@/shared/lib/preview-session";
 
+import { AppShell } from "@/shared/layout/AppShell";
+import { PREVIEW_ROLE } from "@/shared/lib/preview-session";
 
 export default function AppLayout({
   children,
