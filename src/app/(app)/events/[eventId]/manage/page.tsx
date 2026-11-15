@@ -1,3 +1,4 @@
+
 import { Suspense } from "react";
 import { ManageOverview } from "@/shared/components/events/manage-overview";
 
@@ -23,7 +24,9 @@ async function ManageContent({ params }: ManageEventPageProps) {
   return <ManageOverview eventId={eventId} />;
 }
 
-export default function ManageEventPage({ params }: ManageEventPageProps) {
+export default function ManageEventPage({
+  params,
+}: ManageEventPageProps) {
   return (
     <Suspense fallback={<ManageLoading />}>
       <ManageContent params={params} />

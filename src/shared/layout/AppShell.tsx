@@ -32,7 +32,7 @@ function AppSidebarFallback() {
 }
 
 export function AppShell({ children, role }: AppShellProps) {
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(true);
 
   useEffect(() => {
     if (!mobileOpen) return;
