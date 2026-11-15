@@ -38,7 +38,7 @@ function DialogOverlay({
   );
 }
 
-function DialogContent({
+function  DialogContent({
   className,
   children,
   showCloseButton = true,

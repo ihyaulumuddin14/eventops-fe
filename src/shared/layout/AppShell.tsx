@@ -2,8 +2,8 @@
 
 import type { ReactNode } from "react";
 import { Suspense, useEffect, useState } from "react";
-import { AppHeader } from "@/shared/components/layout/app-header";
 import { AppSidebar } from "@/shared/components/ui/app-sidebar";
+import { AppHeader } from "@/shared/layout/AppHeader";
 import type { EventRole } from "@/shared/lib/event-permissions";
 
 type AppShellProps = {
