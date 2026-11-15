@@ -2,29 +2,43 @@
 
 import { Mail, Menu, UserRound, X } from "lucide-react";
 import Link from "next/link";
-import type { EventRole } from "@/shared/lib/event-permissions";
-import { EVENT_ROLE_LABELS } from "@/shared/lib/event-permissions";
+import {
+  EVENT_ROLE_LABELS,
+  type EventRole,
+} from "@/shared/lib/event-permissions";
 
 type AppHeaderProps = {
   role: EventRole;
+  showEventSidebar: boolean;
   mobileOpen: boolean;
   onMenuClick: () => void;
 };
 
-export function AppHeader({ role, mobileOpen, onMenuClick }: AppHeaderProps) {
+export function AppHeader({
+  role,
+  showEventSidebar,
+  mobileOpen,
+  onMenuClick,
+}: AppHeaderProps) {
   return (
     <header className="sticky top-0 z-50 flex h-16 items-center justify-between border-b border-[#c0c7d0] bg-white px-4 md:px-8">
       <div className="flex min-w-0 items-center gap-3">
-        <button
-          type="button"
-          onClick={onMenuClick}
-          aria-label={mobileOpen ? "Close navigation" : "Open navigation"}
-          aria-expanded={mobileOpen}
-          aria-controls="mobile-app-navigation"
-          className="flex size-10 items-center justify-center rounded-lg text-[#2c4558] hover:bg-[#f3f3f4] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#226a9a] lg:hidden"
-        >
-          {mobileOpen ? <X className="size-5" /> : <Menu className="size-5" />}
-        </button>
+        {showEventSidebar && (
+          <button
+            type="button"
+            onClick={onMenuClick}
+            aria-label={mobileOpen ? "Close navigation" : "Open navigation"}
+            aria-expanded={mobileOpen}
+            aria-controls="mobile-app-navigation"
+            className="flex size-10 items-center justify-center rounded-lg text-[#2c4558] hover:bg-[#f3f3f4] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#226a9a] lg:hidden"
+          >
+            {mobileOpen ? (
+              <X className="size-5" />
+            ) : (
+              <Menu className="size-5" />
+            )}
+          </button>
+        )}
 
         <span className="truncate text-base font-semibold text-[#0b3048] lg:hidden">
           BCC EventOps

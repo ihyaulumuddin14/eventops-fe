@@ -397,10 +397,8 @@ export function EventCatalog({ role }: EventCatalogProps) {
               />
             </div>
 
-            <div
-              // aria-label="Filter by event status"
-              className="flex gap-2 overflow-x-auto pb-1 lg:pb-0"
-            >
+            <fieldset className="flex gap-2 overflow-x-auto pb-1 lg:pb-0">
+              <legend className="sr-only">Filter by event status</legend>
               {FILTERS.map((filter) => {
                 const isActive = activeFilter === filter.value;
 
@@ -434,7 +432,7 @@ export function EventCatalog({ role }: EventCatalogProps) {
                   </button>
                 );
               })}
-            </div>
+            </fieldset>
           </div>
 
           {/* Event summary */}
