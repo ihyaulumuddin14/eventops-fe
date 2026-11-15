@@ -1,0 +1,39 @@
+
+# Dependencies
+node_modules
+.pnpm-store
+
+# Next.js build output
+.next
+out
+
+# Other build outputs
+dist
+build
+
+# Git
+.git
+.gitignore
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Logs
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+
+# OS and editor files
+.DS_Store
+.idea
+.vscode
+
+# Testing and coverage
+coverage
+playwright-report
+test-results
+
+# Documentation
+README.md

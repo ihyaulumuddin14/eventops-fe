@@ -1,0 +1,7 @@
+services:
+  frontend:
+    image: ghcr.io/ihyaulumuddin14/eventops-fe:latest
+    container_name: event-ops
+    restart: unless-stopped
+    ports:
+      - "80:3000"
