@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useGSAP } from "@gsap/react";
@@ -83,20 +82,20 @@ function ManagementCardLink({ card }: { card: ManagementCard }) {
 }
 
 export function ManageOverview({ eventId }: { eventId: string }) {
-    const containerRef = useRef<HTMLElement>(null);
+  const containerRef = useRef<HTMLElement>(null);
 
-    const normalizedRole = PREVIEW_ROLE.toLowerCase();
+  const normalizedRole = PREVIEW_ROLE.toLowerCase();
 
-    const isCoordinator = normalizedRole === "coordinator";
-    const isCommittee = normalizedRole === "committee";
+  const isCoordinator = normalizedRole === "coordinator";
+  const isCommittee = normalizedRole === "committee";
 
-    const hasManagementAccess = isCoordinator || isCommittee;
+  const hasManagementAccess = isCoordinator || isCommittee;
 
-    const roleLabel = isCoordinator
+  const roleLabel = isCoordinator
     ? "Koordinator"
     : isCommittee
-        ? "Panitia"
-        : "Peserta";
+      ? "Panitia"
+      : "Peserta";
 
   useGSAP(
     () => {
@@ -173,10 +172,7 @@ export function ManageOverview({ eventId }: { eventId: string }) {
 
   if (!hasManagementAccess) {
     return (
-      <main
-        ref={containerRef}
-        className="min-h-full bg-[#f8fafc]"
-      >
+      <main ref={containerRef} className="min-h-full bg-[#f8fafc]">
         <div className="mx-auto max-w-3xl px-4 py-16 sm:px-8">
           <div className="rounded-2xl border border-[#e2e8f0] bg-white p-8 text-center">
             <div className="mx-auto flex size-12 items-center justify-center rounded-xl bg-[#e9f2fe] text-[#00517d]">
@@ -205,30 +201,20 @@ export function ManageOverview({ eventId }: { eventId: string }) {
   }
 
   return (
-    <main
-      ref={containerRef}
-      className="min-h-full bg-[#f8fafc]"
-    >
+    <main ref={containerRef} className="min-h-full bg-[#f8fafc]">
       <div className="mx-auto w-full max-w-[1600px] px-4 pb-12 pt-8 sm:px-8 lg:px-12 2xl:px-16">
-
         {/* Breadcrumb */}
         <nav
           aria-label="Breadcrumb"
           className="flex flex-wrap items-center gap-2 text-xs font-medium text-[#64748b]"
         >
-          <Link
-            href="/events"
-            className="hover:text-[#00517d]"
-          >
+          <Link href="/events" className="hover:text-[#00517d]">
             Event Catalog
           </Link>
 
           <span aria-hidden="true">/</span>
 
-          <Link
-            href={`/events/${eventId}`}
-            className="hover:text-[#00517d]"
-          >
+          <Link href={`/events/${eventId}`} className="hover:text-[#00517d]">
             Event Overview
           </Link>
 
@@ -251,8 +237,8 @@ export function ManageOverview({ eventId }: { eventId: string }) {
             </h1>
 
             <p className="mt-2 max-w-2xl text-sm leading-6 text-[#526273] sm:text-base">
-              Configure your event, organize its sessions, and keep
-              your team informed.
+              Configure your event, organize its sessions, and keep your team
+              informed.
             </p>
 
             <p className="mt-3 text-xs text-[#64748b]">
@@ -280,10 +266,7 @@ export function ManageOverview({ eventId }: { eventId: string }) {
         </div>
 
         {/* Management sections */}
-        <section
-          aria-labelledby="management-heading"
-          className="mt-10"
-        >
+        <section aria-labelledby="management-heading" className="mt-10">
           <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-end">
             <div>
               <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#64748b]">
@@ -309,19 +292,13 @@ export function ManageOverview({ eventId }: { eventId: string }) {
 
           <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2">
             {cards.map((card) => (
-              <ManagementCardLink
-                key={card.title}
-                card={card}
-              />
+              <ManagementCardLink key={card.title} card={card} />
             ))}
           </div>
         </section>
 
         {/* Operations is a separate workspace */}
-        <section
-          aria-labelledby="operations-heading"
-          className="mt-9"
-        >
+        <section aria-labelledby="operations-heading" className="mt-9">
           <div className="flex flex-col gap-4 rounded-2xl border border-[#d8e3eb] bg-[#eef4f8] p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
             <div className="flex items-start gap-4">
               <div className="flex size-11 shrink-0 items-center justify-center rounded-xl border border-[#d8e3eb] bg-white text-[#00517d]">
@@ -341,8 +318,8 @@ export function ManageOverview({ eventId }: { eventId: string }) {
                 </h2>
 
                 <p className="mt-1 max-w-xl text-sm leading-6 text-[#526273]">
-                  Monitor attendance, search participants, and
-                  manage event check-in.
+                  Monitor attendance, search participants, and manage event
+                  check-in.
                 </p>
               </div>
             </div>
@@ -356,7 +333,6 @@ export function ManageOverview({ eventId }: { eventId: string }) {
             </Link>
           </div>
         </section>
-
       </div>
     </main>
   );
