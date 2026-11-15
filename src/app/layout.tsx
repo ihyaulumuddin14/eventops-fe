@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import type { ReactNode } from "react";
 import "./globals.css";
+import { QueryProvider } from "@/shared/providers/query-provider";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -27,7 +28,9 @@ export default function RootLayout({
       className={`${plusJakartaSans.variable} min-h-full antialiased`}
     >
       <body className="min-h-screen bg-background font-sans text-foreground">
-        {children}
+        <QueryProvider>
+          {children}
+        </QueryProvider>
       </body>
     </html>
   );
