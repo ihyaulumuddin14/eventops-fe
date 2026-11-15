@@ -21,6 +21,7 @@ import {
   FieldLabel,
 } from "@/shared/components/ui/field";
 import { Input } from "@/shared/components/ui/input";
+import { useLogin } from "../hooks";
 
 import { type LoginFormInput, loginSchema } from "../schema/auth.schema";
 
@@ -30,7 +31,7 @@ export function LoginForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<LoginFormInput>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -39,10 +40,10 @@ export function LoginForm() {
     },
   });
 
-  async function onSubmit(data: LoginFormInput) {
-    console.log(data);
+  const { mutate, isPending } = useLogin();
 
-    // TODO: Integrasikan dengan endpoint login backend.
+  async function onSubmit(data: LoginFormInput) {
+    mutate(data);
   }
 
   return (
@@ -123,11 +124,11 @@ export function LoginForm() {
 
         <Button
           type="submit"
-          disabled={isSubmitting}
+          disabled={isPending}
           className="mt-2 h-12 w-full bg-sky-700 text-base hover:bg-sky-800"
         >
-          {isSubmitting ? "Memproses..." : "Masuk ke Platform"}
-          {!isSubmitting && <ArrowRight className="ml-1 size-4" />}
+          {isPending ? "Memproses..." : "Masuk ke Platform"}
+          {!isPending && <ArrowRight className="ml-1 size-4" />}
         </Button>
       </form>
 

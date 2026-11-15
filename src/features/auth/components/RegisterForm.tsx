@@ -24,6 +24,7 @@ import {
 import { Input } from "@/shared/components/ui/input";
 
 import { type RegisterFormInput, registerSchema } from "../schema/auth.schema";
+import { useRegister } from "../hooks";
 
 export function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -32,7 +33,7 @@ export function RegisterForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<RegisterFormInput>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -43,10 +44,11 @@ export function RegisterForm() {
     },
   });
 
+  const { mutate, isPending } = useRegister();
+
   async function onSubmit(data: RegisterFormInput) {
     console.log(data);
-
-    // TODO: Integrasikan dengan endpoint register backend.
+    mutate(data);
   }
 
   return (
@@ -187,11 +189,11 @@ export function RegisterForm() {
 
         <Button
           type="submit"
-          disabled={isSubmitting}
+          disabled={isPending}
           className="mt-2 h-12 w-full bg-sky-700 text-base hover:bg-sky-800"
         >
-          {isSubmitting ? "Memproses..." : "Daftar Akun"}
-          {!isSubmitting && <ArrowRight className="ml-1 size-4" />}
+          {isPending ? "Memproses..." : "Daftar Akun"}
+          {!isPending && <ArrowRight className="ml-1 size-4" />}
         </Button>
       </form>
 
