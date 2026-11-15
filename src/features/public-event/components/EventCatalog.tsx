@@ -3,18 +3,19 @@
 import { Search } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { DEMO_EVENTS, type EventStatus } from "@/shared/constant/DEMOEVENTS";
+import { DEMO_EVENTS } from "@/shared/constant/DEMOEVENTS";
 import type { EventRole } from "@/shared/lib/event-permissions";
 import { canCreateEvent } from "@/shared/lib/event-permissions";
+import { EventStatus } from "../types";
 import EventCard from "./EventCard";
 
 type StatusFilter = "all" | EventStatus;
 
 const FILTERS: { label: string; value: StatusFilter }[] = [
   { label: "All Events", value: "all" },
-  { label: "Upcoming", value: "upcoming" },
-  { label: "Ongoing", value: "ongoing" },
-  { label: "Finished", value: "finished" },
+  { label: "Upcoming", value: EventStatus.UPCOMING },
+  { label: "Ongoing", value: EventStatus.ONGOING },
+  { label: "Finished", value: EventStatus.FINISHED },
 ];
 
 type EventCatalogProps = {
