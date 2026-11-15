@@ -22,9 +22,8 @@ import {
   FieldLabel,
 } from "@/shared/components/ui/field";
 import { Input } from "@/shared/components/ui/input";
-
-import { type RegisterFormInput, registerSchema } from "../schema/auth.schema";
 import { useRegister } from "../hooks";
+import { type RegisterFormInput, registerSchema } from "../schema/auth.schema";
 
 export function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);

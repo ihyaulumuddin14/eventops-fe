@@ -28,9 +28,7 @@ export default function RootLayout({
       className={`${plusJakartaSans.variable} min-h-full antialiased`}
     >
       <body className="min-h-screen bg-background font-sans text-foreground">
-        <QueryProvider>
-          {children}
-        </QueryProvider>
+        <QueryProvider>{children}</QueryProvider>
       </body>
     </html>
   );
