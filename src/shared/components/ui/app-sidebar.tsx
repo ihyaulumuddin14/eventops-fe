@@ -193,7 +193,9 @@ function SidebarContent({
   eventId,
   onNavigate,
 }: SidebarContentProps) {
-  const sections = getEventSections(eventId, role);
+  const sections: NavigationSection[] = [
+    ...(eventId ? getEventSections(eventId, role) : []),
+  ];
 
   return (
     <div className="flex h-full min-h-0 flex-col">
