@@ -1,3 +1,3 @@
-export default function MyRegistrationsPage() {
-  return <div>MyRegistrationsPage</div>;
+export default function InvitationsPage() {
+  return <div>InvitationsPage</div>;
 }
