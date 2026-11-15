@@ -3,9 +3,10 @@ import { useSyncExternalStore } from "react";
 let accessToken: string | null = null;
 const listeners = new Set<() => void>();
 
-const emit = () => listeners.forEach((l) => {
-  l()
-});
+const emit = () =>
+  listeners.forEach((l) => {
+    l();
+  });
 
 export const setAccessToken = (token: string) => {
   accessToken = token;
@@ -26,8 +27,4 @@ const subscribe = (listener: () => void) => {
 
 // reactive hooks
 export const useAccessToken = () =>
-  useSyncExternalStore(
-    subscribe,
-    getAccessToken,
-    () => null,
-  );
+  useSyncExternalStore(subscribe, getAccessToken, () => null);

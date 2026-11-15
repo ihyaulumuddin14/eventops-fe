@@ -15,6 +15,7 @@ import {
 } from "@/shared/components/ui/dialog";
 import type { CatalogEvent } from "@/shared/constant/DEMOEVENTS";
 import { useAccessToken } from "@/shared/lib/token";
+
 // import { useRegisterEvent } from "../hooks";
 
 type Props = {
@@ -51,7 +52,11 @@ export function EventRegisterDialog({
 
   // Satu sumber kebenaran buat label + disabled
   const button = isRegistered
-    ? { label: "Registered", disabled: true, icon: <Check className="size-4" /> }
+    ? {
+        label: "Registered",
+        disabled: true,
+        icon: <Check className="size-4" />,
+      }
     : isFinished
       ? { label: "Registration closed", disabled: true, icon: null }
       : isFull

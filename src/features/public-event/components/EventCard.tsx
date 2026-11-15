@@ -142,7 +142,13 @@ const EventCard = ({ event }: { event: CatalogEvent }) => {
           </div>
 
           {/* Card action */}
-          <Button variant="outline" onClick={() => setOpen(true)} className="w-full mt-auto">View Details</Button>
+          <Button
+            variant="outline"
+            onClick={() => setOpen(true)}
+            className="w-full mt-auto"
+          >
+            View Details
+          </Button>
         </div>
       </article>
 
