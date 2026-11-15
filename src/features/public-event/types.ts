@@ -5,12 +5,12 @@ export enum EventStatus {
 }
 
 export interface Event {
-  id: string,
-  title: string,
-  description: string,
-  date: string,
-  loction: string,
-  available_quota: number,
-  max_quota: number,
-  status: EventStatus
+  id: string;
+  title: string;
+  description: string;
+  date: string;
+  loction: string;
+  available_quota: number;
+  max_quota: number;
+  status: EventStatus;
 }

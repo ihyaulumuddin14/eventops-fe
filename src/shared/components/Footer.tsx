@@ -17,12 +17,12 @@ const Footer = () => {
 
         <p className="text-xs leading-5 text-[#41474f] sm:text-sm">
           © 2026 BCC EventOps. Basic Computing Community,
-          <br className="hidden sm:block" /> Fakultas Ilmu Komputer,
-          Universitas Brawijaya.
+          <br className="hidden sm:block" /> Fakultas Ilmu Komputer, Universitas
+          Brawijaya.
         </p>
       </div>
     </footer>
-  )
-}
+  );
+};
 
-export default Footer
+export default Footer;
